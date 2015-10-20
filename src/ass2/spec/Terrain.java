@@ -166,7 +166,7 @@ public class Terrain {
 
         for(int z = 0; z < mySize.height - 1; z++){
             for(int x = 0; x < mySize.width - 1; x++){
-                gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+                gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
                 gl.glBegin(GL2.GL_POLYGON);
                 {
                     gl.glVertex3d(x, myAltitude[x][z], z);
@@ -175,7 +175,7 @@ public class Terrain {
                 }
                 gl.glEnd();
 
-                gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+                gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
                 gl.glBegin(GL2.GL_POLYGON);
                 {
                     gl.glVertex3d(x + 1, myAltitude[x + 1][z], z);

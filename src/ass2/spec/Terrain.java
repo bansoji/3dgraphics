@@ -170,17 +170,17 @@ public class Terrain {
                 gl.glBegin(GL2.GL_POLYGON);
                 {
                     gl.glVertex3d(x, myAltitude[x][z], z);
-                    gl.glVertex3d(x, myAltitude[x][z], z + 1);
-                    gl.glVertex3d(x + 1, myAltitude[x][z], z);
+                    gl.glVertex3d(x, myAltitude[x][z + 1], z + 1);
+                    gl.glVertex3d(x + 1, myAltitude[x + 1][z], z);
                 }
                 gl.glEnd();
 
                 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
                 gl.glBegin(GL2.GL_POLYGON);
                 {
-                    gl.glVertex3d(x + 1, myAltitude[x][z], z);
-                    gl.glVertex3d(x, myAltitude[x][z], z + 1);
-                    gl.glVertex3d(x + 1, myAltitude[x][z], z + 1);
+                    gl.glVertex3d(x + 1, myAltitude[x + 1][z], z);
+                    gl.glVertex3d(x, myAltitude[x][z + 1], z + 1);
+                    gl.glVertex3d(x + 1, myAltitude[x + 1][z + 1], z + 1);
                 }
                 gl.glEnd();
             }

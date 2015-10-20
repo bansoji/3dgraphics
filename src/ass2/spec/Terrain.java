@@ -163,23 +163,24 @@ public class Terrain {
     }
 
     public void draw(GL2 gl){
+        gl.glBegin(GL2.GL_TRIANGLES);
+        {
+            for(int z = 0; z < mySize.height - 1; z++){
+                for(int x = 0; x < mySize.width - 1; x++){
+                    gl.glColor3f(1,1,1);
 
-        for(int z = 0; z < mySize.height - 1; z++){
-            for(int x = 0; x < mySize.width - 1; x++){
-                gl.glBegin(GL2.GL_POLYGON);
-                gl.glVertex3d(x,myAltitude[x][z],z);
-                gl.glVertex3d(x,myAltitude[x][z],z+1);
-                gl.glVertex3d(x+1,myAltitude[x][z],z);
-                gl.glEnd();
+                    gl.glVertex3d(x,myAltitude[x][z],z);
+                    gl.glVertex3d(x,myAltitude[x][z],z+1);
+                    gl.glVertex3d(x+1,myAltitude[x][z],z);
 
-                gl.glBegin(GL2.GL_POLYGON);
-                gl.glVertex3d(x+1,myAltitude[x][z],z);
-                gl.glVertex3d(x,myAltitude[x][z],z+1);
-                gl.glVertex3d(x+1,myAltitude[x][z],z+1);
-                gl.glEnd();
-
+                    gl.glVertex3d(x+1,myAltitude[x][z],z);
+                    gl.glVertex3d(x,myAltitude[x][z],z+1);
+                    gl.glVertex3d(x+1,myAltitude[x][z],z+1);
+                }
             }
+
         }
+        gl.glEnd();
     }
 
 

@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import javax.media.opengl.glu.GLU;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.glu.GLUquadric;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -227,8 +229,9 @@ public class Terrain {
         myRoads.add(road);        
     }
 
-    public void draw(GL2 gl){
+    public void draw(GL2 gl, GLU glu){
 
+        //draw terrain
         for(int z = 0; z < mySize.height - 1; z++){
             for(int x = 0; x < mySize.width - 1; x++){
                 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
@@ -250,6 +253,19 @@ public class Terrain {
                 gl.glEnd();
             }
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+        }
+
+        //draw trees
+        for(Tree t : myTrees){
+            gl.glLoadIdentity();
+            gl.glTranslated(t.getPosition()[0],t.getPosition()[1],t.getPosition()[2]);
+            gl.glRotated(-90,1,0,0);
+            GLUquadric leaves = glu.gluNewQuadric();
+            GLUquadric trunk = glu.gluNewQuadric();
+            glu.gluCylinder(trunk,0.1,0.1,1,8,8);
+            gl.glTranslated(0,0,0.2);
+            glu.gluCylinder(leaves,0.5,0,2,16,16);
+
         }
 
 

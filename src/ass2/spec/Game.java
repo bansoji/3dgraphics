@@ -3,10 +3,7 @@ package ass2.spec;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLProfile;
+import javax.media.opengl.*;
 import javax.media.opengl.awt.GLJPanel;
 import javax.swing.JFrame;
 import com.jogamp.opengl.util.FPSAnimator;
@@ -65,8 +62,27 @@ public class Game extends JFrame implements GLEventListener{
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
-		
-	}
+        GL2 gl = drawable.getGL().getGL2();
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+        gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glClear(GL2.GL_DEPTH_BUFFER_BIT);
+
+        gl.glLoadIdentity();
+
+        myTerrain.draw(gl);
+
+        /*// set the view matrix based on the camera position
+        myCamera.setView(gl);
+
+        // update the mouse position
+        Mouse.theMouse.update(gl);
+
+        // update the objects
+        update();
+
+        // draw the scene tree
+        GameObject.ROOT.draw(gl);*/
+    }
 
 	@Override
 	public void dispose(GLAutoDrawable drawable) {

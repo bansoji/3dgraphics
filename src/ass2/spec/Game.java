@@ -63,11 +63,11 @@ public class Game extends JFrame implements GLEventListener{
 	public void display(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
         GL2 gl = drawable.getGL().getGL2();
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-        gl.glEnable(GL2.GL_DEPTH_TEST);
-        gl.glClear(GL2.GL_DEPTH_BUFFER_BIT);
 
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+
 
         myTerrain.draw(gl);
 
@@ -93,6 +93,9 @@ public class Game extends JFrame implements GLEventListener{
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
+        GL2 gl = drawable.getGL().getGL2();
+        gl.glEnable(GL2.GL_NORMALIZE);
+
 		
 	}
 
@@ -100,6 +103,10 @@ public class Game extends JFrame implements GLEventListener{
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
 		// TODO Auto-generated method stub
-		
-	}
+        GL2 gl = drawable.getGL().getGL2();
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+
+        //Perspective camera
+    }
 }

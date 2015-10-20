@@ -1,5 +1,9 @@
 package ass2.spec;
 
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureCoords;
+
+import javax.media.opengl.GL2;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +16,76 @@ public class Road {
 
     private List<Double> myPoints;
     private double myWidth;
-    
+    private Terrain myTerrain;
+
+
+    public double altitude(double x, double z) {
+        return myTerrain.altitude(x, z);
+    }
+    public void draw(GL2 gl) {
+        gl.glColor3d(110 / 255d, 110 / 255d, 110 / 255d);
+
+
+
+        double offset = 0.001;
+        double roadSegment = 0.01;
+        for (double t = 0.0; t <= 0.99; t += roadSegment) {
+            double[] point0 = point(t);
+            double x0 = point0[0];
+            double z0 = point0[1];
+            double y0 = altitude(x0, z0) + offset;
+            double[] midpoint = {x0, y0, z0};
+
+            double t1 = t + roadSegment;
+            double[] point1 = point(t1);
+            double x1 = point1[0];
+            double z1 = point1[1];
+            double y1 = altitude(x1, z1) + offset;
+
+            double[] tangent = {x1 - x0, y1 - y0, z1 - z0, 1}; // for matrix
+            // calculation
+
+            double[] scaleRotateTangent = new double[4];
+
+
+            double[] pointA = {Math.floor(x0), myTerrain.altitude(Math.floor(x0), Math.floor(z0)), Math.floor(z0)};
+            double[] pointB = {Math.floor(x0), myTerrain.altitude(Math.floor(x0), Math.ceil(z0)), Math.ceil(z0)};
+            double[] pointC = {Math.ceil(x0), myTerrain.altitude(Math.ceil(x0), Math.ceil(z0)), Math.ceil(z0)};
+            double[] planeNormal = MathUtil.normal(pointA, pointB, pointC);
+            double[] rotateTangent = MathUtil.crossProduct(planeNormal, tangent);
+            double[] normalisedVector = MathUtil.normaliseVector(rotateTangent);
+            double[] nv4cal = {normalisedVector[0], normalisedVector[1], normalisedVector[2], 1};
+            scaleRotateTangent = MathUtil.multiply(
+                    MathUtil.scaleMatrix(myWidth / 2),
+                    nv4cal);
+
+
+            double[] rightbottom = {scaleRotateTangent[0] + midpoint[0],
+                    scaleRotateTangent[1] + midpoint[1],
+                    scaleRotateTangent[2] + midpoint[2]};
+            double[] leftbottom = {-scaleRotateTangent[0] + midpoint[0],
+                    -scaleRotateTangent[1] + midpoint[1],
+                    -scaleRotateTangent[2] + midpoint[2]};
+            double[] lefttop = {-scaleRotateTangent[0] + x1,
+                    -scaleRotateTangent[1] + y1, -scaleRotateTangent[2] + z1};
+            double[] righttop = {scaleRotateTangent[0] + x1,
+                    scaleRotateTangent[1] + y1, scaleRotateTangent[2] + z1};
+            double[] normal = MathUtil
+                    .normal(leftbottom, rightbottom, righttop);
+            gl.glBegin(GL2.GL_QUADS);
+            gl.glNormal3d(-normal[0], -normal[1], -normal[2]);
+
+            gl.glVertex3d(rightbottom[0], rightbottom[1], rightbottom[2]);// --
+
+            gl.glVertex3d(righttop[0], righttop[1], righttop[2]); // --
+
+            gl.glVertex3d(lefttop[0], lefttop[1], lefttop[2]);// --
+
+            gl.glVertex3d(leftbottom[0], leftbottom[1], leftbottom[2]);// --
+            gl.glEnd();
+        }
+    }
+
     /** 
      * Create a new road starting at the specified point
      */
@@ -29,7 +102,8 @@ public class Road {
      * @param width
      * @param spine
      */
-    public Road(double width, double[] spine) {
+    public Road(double width, double[] spine, Terrain terrain) {
+        myTerrain = terrain;
         myWidth = width;
         myPoints = new ArrayList<Double>();
         for (int i = 0; i < spine.length; i++) {
@@ -98,9 +172,9 @@ public class Road {
     public double[] point(double t) {
         int i = (int)Math.floor(t);
         t = t - i;
-        
+
         i *= 6;
-        
+
         double x0 = myPoints.get(i++);
         double y0 = myPoints.get(i++);
         double x1 = myPoints.get(i++);
@@ -109,12 +183,12 @@ public class Road {
         double y2 = myPoints.get(i++);
         double x3 = myPoints.get(i++);
         double y3 = myPoints.get(i++);
-        
+
         double[] p = new double[2];
 
         p[0] = b(0, t) * x0 + b(1, t) * x1 + b(2, t) * x2 + b(3, t) * x3;
-        p[1] = b(0, t) * y0 + b(1, t) * y1 + b(2, t) * y2 + b(3, t) * y3;        
-        
+        p[1] = b(0, t) * y0 + b(1, t) * y1 + b(2, t) * y2 + b(3, t) * y3;
+
         return p;
     }
     

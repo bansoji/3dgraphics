@@ -225,7 +225,7 @@ public class Terrain {
      * @param z
      */
     public void addRoad(double width, double[] spine) {
-        Road road = new Road(width, spine);
+        Road road = new Road(width, spine, this);
         myRoads.add(road);        
     }
 
@@ -268,6 +268,10 @@ public class Terrain {
 
         }
 
+            for(Road road: myRoads) {
+                gl.glLoadIdentity();
+                road.draw(gl);
+            }
 
     }
 

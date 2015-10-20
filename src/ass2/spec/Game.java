@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLJPanel;
+import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 import com.jogamp.opengl.util.FPSAnimator;
 
@@ -19,6 +20,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 public class Game extends JFrame implements GLEventListener{
 
     private Terrain myTerrain;
+    private GLU glu;
 
     public Game(Terrain terrain) {
     	super("Assignment 2");
@@ -63,10 +65,13 @@ public class Game extends JFrame implements GLEventListener{
 	public void display(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
         GL2 gl = drawable.getGL().getGL2();
+        glu = new GLU();
 
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+
+        setCamera(gl, glu, 100);
 
 
         myTerrain.draw(gl);
@@ -94,7 +99,7 @@ public class Game extends JFrame implements GLEventListener{
 	public void init(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
         GL2 gl = drawable.getGL().getGL2();
-        gl.glEnable(GL2.GL_NORMALIZE);
+        glu = new GLU();
 
 		
 	}
@@ -108,5 +113,20 @@ public class Game extends JFrame implements GLEventListener{
         gl.glLoadIdentity();
 
         //Perspective camera
+    }
+
+
+    private void setCamera(GL2 gl, GLU glu, float distance) {
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+
+        //Perspective Camera
+        float aspectRatio = (float) (800.0 / 600.0);
+        glu.gluPerspective(90, 1.333, 1, 1000);
+        glu.gluLookAt(0, 0.5, 9, 0, 0, 0, 0, 1, 0);
+
+        // Change back to model view
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();
     }
 }

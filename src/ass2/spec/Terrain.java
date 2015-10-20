@@ -128,7 +128,7 @@ public class Terrain {
      * Case 1 - if on pt, get altitude
      * Case 2 - if on triangle - interpolate using 2 points
      * Case 3 - if on face - interpolate using two interpolation
-     *
+     * TODO: Verify if correct
      *
      *
      * 
@@ -139,11 +139,66 @@ public class Terrain {
     public double altitude(double x, double z) {
         double altitude = 0;
 
-        double topLeftX = Math.floor(x);
-        double topLeftZ = Math.floor(z);
-        double
+        double leftX = Math.floor(x);
+        double rightX = Math.ceil(x);
+
+        double topZ = Math.floor(z);
+        double bottomZ = Math.ceil(z);
+
+        // calculates the offset b in z = -x + b
+        // to find x: x = -z + b
+        double offset = leftX + bottomZ;
+        double hypotenuseX = offset - z;
+
+        if (x == (int) x && z == (int) z) {
+            altitude = getGridAltitude((int) x,(int) z);
+        } else if (x == (int) x || z == (int) z) {
+            if (x == (int) x) {
+                altitude = calcZAltitude(x, topZ, x, bottomZ, z);
+            } else {
+                //case 2
+                //This one's inverted as the x is not fixed instead.
+                altitude = calcXAltitude(leftX, z, rightX, z, x);
+            }
+        } else if (x == hypotenuseX) {
+            //case 2
+            //calculate pt. X on the triangle line
+            altitude = calcZAltitude(leftX, bottomZ, rightX, topZ, z);
+        } else if (x < hypotenuseX) {
+            //left triangle
+            //Take bottom left, top left, top right points
+            altitude = bilinearInterp(leftX, bottomZ, leftX, topZ, rightX, topZ, hypotenuseX, x, z);
+        } else {
+            //right triangle
+            //Take top right, bottom right, bottom left points
+            altitude = bilinearInterp(rightX, topZ, rightX, bottomZ, leftX, bottomZ, hypotenuseX, x, z);
+        }
 
         
+        return altitude;
+    }
+
+    private double calcXAltitude(double x1, double z1, double x2, double z2, double x) {
+        double altitude = ((x - x1)/(x2 - x1)) * getGridAltitude((int) x2, (int) z2) +
+                ((x2 - x)/(x2 - x1)) * getGridAltitude((int) x1, (int) z1);
+
+        return altitude;
+    }
+
+    private double calcZAltitude(double x1, double z1, double x2, double z2, double z) {
+        double altitude = ((z - z1)/(z2 - z1)) * getGridAltitude((int) x2, (int) z2) +
+                ((z2 - z)/(z2 - z1)) * getGridAltitude((int) x1, (int) z1);
+
+        return altitude;
+    }
+
+    private double bilinearInterp(double x1, double z1, double x2, double z2, double x3, double z3, double hypotenuseX, double x, double z) {
+        double gradient1 = calcZAltitude(x1, z1, x2, z2, z);
+        double gradient2 = calcZAltitude(x1, z1, x3, z3, z);
+
+        double altitude = ((x - x1)/(hypotenuseX - x1)) * gradient2 +
+                ((hypotenuseX - x)/(hypotenuseX - x1)) * gradient1;
+
         return altitude;
     }
 

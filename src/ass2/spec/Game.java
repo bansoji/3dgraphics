@@ -123,7 +123,7 @@ public class Game extends JFrame implements GLEventListener{
         //Perspective Camera
         float aspectRatio = (float) (800.0 / 600.0);
         glu.gluPerspective(90, 1.333, 1, 1000);
-        glu.gluLookAt(0, 0.5, 9, 0, 0, 0, 0, 1, 0);
+        glu.gluLookAt(5, 3, 15, 5, 0, 5, 0, 1, 0);
 
         // Change back to model view
         gl.glMatrixMode(GL2.GL_MODELVIEW);

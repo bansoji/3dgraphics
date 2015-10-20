@@ -124,6 +124,13 @@ public class Terrain {
      * Non-integer points should be interpolated from neighbouring grid points
      * 
      * TO BE COMPLETED
+     *
+     * Case 1 - if on pt, get altitude
+     * Case 2 - if on triangle - interpolate using 2 points
+     * Case 3 - if on face - interpolate using two interpolation
+     *
+     *
+     *
      * 
      * @param x
      * @param z
@@ -132,7 +139,10 @@ public class Terrain {
     public double altitude(double x, double z) {
         double altitude = 0;
 
-        
+        double topLeftX = Math.floor(x);
+        double topLeftZ = Math.floor(z);
+        double
+
         
         return altitude;
     }

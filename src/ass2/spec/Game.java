@@ -1,5 +1,7 @@
 package ass2.spec;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -14,14 +16,21 @@ import com.jogamp.opengl.util.FPSAnimator;
 /**
  * @author malcolmr
  */
-public class Game extends JFrame implements GLEventListener{
+public class Game extends JFrame implements GLEventListener, KeyListener{
 
     private Terrain myTerrain;
     private GLU glu;
+    private double[] cameraPos;
+    private double cameraRot;
+    private double moveDistance;
+
 
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
+        cameraPos = new double[]{0,0};
+        cameraRot = 45;
+        moveDistance = 0.1;
    
     }
     
@@ -34,6 +43,9 @@ public class Game extends JFrame implements GLEventListener{
           GLCapabilities caps = new GLCapabilities(glp);
           GLJPanel panel = new GLJPanel();
           panel.addGLEventListener(this);
+          panel.addKeyListener(this);
+          panel.setFocusable(true);
+
  
           // Add an animator to call 'display' at 60fps        
           FPSAnimator animator = new FPSAnimator(60);
@@ -119,11 +131,57 @@ public class Game extends JFrame implements GLEventListener{
 
         //Perspective Camera
         float aspectRatio = (float) (800.0 / 600.0);
-        glu.gluPerspective(90, 1.333, 1, 1000);
-        glu.gluLookAt(5, 5, 10, 0, 0, 0, 0, 1, 0);
+        glu.gluPerspective(90, 1.333, 0.1, 1000);
+
+        double altitudeOffset = 0.5;
+        glu.gluLookAt(
+                cameraPos[0],
+                myTerrain.altitude(cameraPos[0],cameraPos[1]) + altitudeOffset,
+                cameraPos[1],
+                cameraPos[0] + Math.cos(Math.toRadians(cameraRot)),
+                myTerrain.altitude(cameraPos[0],cameraPos[1]) + altitudeOffset,
+                cameraPos[1] + Math.sin(Math.toRadians(cameraRot)),
+                0,
+                1,
+                0
+        );
+        //glu.gluLookAt(5, 5, 10, 0, 0, 0, 0, 1, 0);
 
         // Change back to model view
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch(e.getKeyCode()){
+            case KeyEvent.VK_UP:
+                cameraPos[0] += moveDistance*Math.cos(Math.toRadians(cameraRot));
+                cameraPos[1] += moveDistance*Math.sin(Math.toRadians(cameraRot));
+                break;
+            case KeyEvent.VK_DOWN :
+                cameraPos[0] -= moveDistance*Math.cos(Math.toRadians(cameraRot));
+                cameraPos[1] -= moveDistance*Math.sin(Math.toRadians(cameraRot));
+                break;
+            case KeyEvent.VK_LEFT:
+                cameraRot -= 10;
+                break;
+            case KeyEvent.VK_RIGHT:
+                cameraRot += 10;
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e){
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e){
+
     }
 }

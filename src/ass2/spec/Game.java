@@ -85,10 +85,22 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 
         myTerrain.draw(gl,glu);
 
-        gl.glEnable(GL2.GL_LIGHTING);
-        gl.glEnable(GL2.GL_CULL_FACE);
 
-        gl.glEnable(GL2.GL_LIGHT0);
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GL2.GL_LIGHT1);
+        gl.glEnable(GL2.GL_NORMALIZE);
+        gl.glPushMatrix();
+
+        float[] d = new float[4];
+        d[0] = d[1] = d[2] = 1.5f;
+        d[3] = 1.0f;
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, d, 0);
+        float[] diffusePos = new float[3];
+        diffusePos[0] = myTerrain.getSunlight()[0];
+        diffusePos[1] = myTerrain.getSunlight()[1];
+        diffusePos[2] = myTerrain.getSunlight()[2];
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, diffusePos, 0);
+        gl.glPopMatrix();
 
         /*// set the view matrix based on the camera position
         myCamera.setView(gl);
@@ -114,9 +126,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 		// TODO Auto-generated method stub
         GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
+        gl.glEnable(GL2.GL_DEPTH_TEST);
 
-		
-	}
+
+
+    }
 
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,

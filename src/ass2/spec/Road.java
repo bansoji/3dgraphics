@@ -86,6 +86,7 @@ public class Road {
                     -translationVector[2] + nextMidPoint[2]};
 
             //Step 9
+            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_QUADS);
             gl.glBegin(GL2.GL_QUADS);
             gl.glNormal3d(0, 1, 0);
             gl.glVertex3d(currentRightPoint[0], currentRightPoint[1], currentRightPoint[2]);

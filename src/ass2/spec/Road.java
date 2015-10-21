@@ -65,11 +65,11 @@ public class Road {
             double[] nextPoint2 = point(nextT2);
             double x2 = nextPoint2[0];
             double z2 = nextPoint2[1];
-            double[] nextMidPoint2 = {x2, altitude, z2};
 
             //Step 3
             double[] tangent = {x1 - x, 0, z1 - z, 1}; // is a vector, for matrix calc
-            double[] tangent2 = {x2 - x1, 0, z2 - z1, 1};
+            double[] tangent2 = {x2 - x1, 0, z2 - z1, 1}; // find the next tangent so i don't have to approximate
+            // the next points
 
             //Step 4
             double[] sideVector = MathUtil.crossProduct(vectorNormal, tangent);

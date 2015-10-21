@@ -156,12 +156,26 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyCode()){
             case KeyEvent.VK_UP:
-                cameraPos[0] += moveDistance*Math.cos(Math.toRadians(cameraRot));
-                cameraPos[1] += moveDistance*Math.sin(Math.toRadians(cameraRot));
+                double newCameraX = cameraPos[0] + moveDistance*Math.cos(Math.toRadians(cameraRot));
+                double newCameraZ = cameraPos[1] + moveDistance*Math.sin(Math.toRadians(cameraRot));
+                if(newCameraX > myTerrain.size().getWidth() - 1 || newCameraZ > myTerrain.size().getHeight() - 1||
+                        newCameraX < 0 || newCameraZ < 0){
+                    break;
+                } else {
+                    cameraPos[0] = newCameraX;
+                    cameraPos[1] = newCameraZ;
+                }
                 break;
             case KeyEvent.VK_DOWN :
-                cameraPos[0] -= moveDistance*Math.cos(Math.toRadians(cameraRot));
-                cameraPos[1] -= moveDistance*Math.sin(Math.toRadians(cameraRot));
+                double newCameraXR = cameraPos[0] - moveDistance*Math.cos(Math.toRadians(cameraRot));
+                double newCameraZR = cameraPos[1] - moveDistance*Math.sin(Math.toRadians(cameraRot));
+                if(newCameraXR > myTerrain.size().getWidth() - 1 || newCameraZR > myTerrain.size().getHeight() - 1 ||
+                        newCameraXR < 0 || newCameraZR < 0){
+                    break;
+                } else {
+                    cameraPos[0] = newCameraXR;
+                    cameraPos[1] = newCameraZR;
+                }
                 break;
             case KeyEvent.VK_LEFT:
                 cameraRot -= 10;

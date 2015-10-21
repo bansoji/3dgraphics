@@ -18,11 +18,11 @@ public class Road {
     private double myWidth;
     private Terrain myTerrain;
 
-
+    /**
+     * Draws the road.
+     * @param gl
+     */
     public void draw(GL2 gl) {
-
-        gl.glColor3d(110 / 255d, 110 / 255d, 110 / 255d);
-
 
         /**
          * What to do here:

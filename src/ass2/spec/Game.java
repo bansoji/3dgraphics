@@ -91,9 +91,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glEnable(GL2.GL_NORMALIZE);
         gl.glPushMatrix();
 
-        float[] d = new float[4];
-        d[0] = d[1] = d[2] = 1.5f;
-        d[3] = 1.0f;
+        float[] globalAmb =
+                {0.1f, 0.2f, 0.3f, 1.0f};
+        gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globalAmb, 0);
+
+        float[] d = new float[] {1.0f, 1.0f, 1.0f, 1.0f};
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, d, 0);
         float[] diffusePos = new float[3];
         diffusePos[0] = myTerrain.getSunlight()[0];

@@ -242,9 +242,8 @@ public class Terrain {
                 double[] normal = MathUtil.findNormalToPlane(pt1, pt2, pt3);
                 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_TRIANGLES);
 
-                float[] diffuseCoeff = {1.0f, 1.0f, 1.0f, 1};
-
-                gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, diffuseCoeff, 0);
+                float[] diffuseCoeff = {1.0f, 1.0f, 1.0f, 1.0f};
+                gl.glMaterialfv( GL2.GL_FRONT, GL2.GL_DIFFUSE, diffuseCoeff, 0);
                 gl.glBegin(GL2.GL_POLYGON);
                 gl.glNormal3d(normal[0], normal[1], normal[2]);
                 {

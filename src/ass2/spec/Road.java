@@ -23,61 +23,75 @@ public class Road {
 
         gl.glColor3d(110 / 255d, 110 / 255d, 110 / 255d);
 
+
+        /**
+         * What to do here:
+         * 1. Take a point on the bezier curve
+         * 2. Take next point on curve
+         * 3. Find tangent
+         * 4. Cross-product the normal (the vertical vector), this gives you a side vector.
+         * 5. Normalize the side vector so its magnitude is 1
+         * 6. Times the side vector by width/2
+         * 7. Add to point/Subtract point for left and right
+         * 8. Do same for next point
+         * 9. Draw dat quad
+         *
+         */
         double offset = 0.001; //make sure the road is showing
         double increment = 0.01; //accuracy measure
         double[] startPoint = point(0);
-        double altitude = myTerrain.altitude(startPoint[0], startPoint[1]);
+        double[] vectorNormal = {0, 1, 0, 1}; //Always vertical, since it's a flat road
+        double altitude = myTerrain.altitude(startPoint[0], startPoint[1]) + offset;
 
         for (double t = 0.0; t < 0.99; t += increment) {
+            //Step 1
             double[] currentPoint = point(t);
             double x = currentPoint[0];
             double z = currentPoint[1];
-            double[] midpoint = {x, altitude, z};
+            double[] midPoint = {x, altitude, z};
 
+            //Step 2
             double nextT = t + increment;
             double[] nextPoint = point(nextT);
             double x1 = nextPoint[0];
             double z1 = nextPoint[1];
+            double[] nextMidPoint = {x1, altitude, z1};
 
+            //Step 3
             double[] tangent = {x1 - x, 0, z1 - z, 1}; // is a vector, for matrix calc
 
-            double[] scaleRotateTangent = new double[4]; //Create a matrix that will correctly scale and rotate vectors
+            //Step 4
+            double[] sideVector = MathUtil.crossProduct(vectorNormal, tangent);
+
+            //Step 5
+            double[] normalisedVector = MathUtil.normaliseVector(sideVector);
+
+            //Step 6
+            double[] translationVector = MathUtil.multiply(MathUtil.scaleMatrix(myWidth / 2), normalisedVector);
 
 
-            double[] pointA = {Math.floor(x0), myTerrain.altitude(Math.floor(x0), Math.floor(z0)), Math.floor(z0)};
-            double[] pointB = {Math.floor(x0), myTerrain.altitude(Math.floor(x0), Math.ceil(z0)), Math.ceil(z0)};
-            double[] pointC = {Math.ceil(x0), myTerrain.altitude(Math.ceil(x0), Math.ceil(z0)), Math.ceil(z0)};
-            double[] planeNormal = MathUtil.normal(pointA, pointB, pointC);
-            double[] rotateTangent = MathUtil.crossProduct(planeNormal, tangent);
-            double[] normalisedVector = MathUtil.normaliseVector(rotateTangent);
-            double[] nv4cal = {normalisedVector[0], normalisedVector[1], normalisedVector[2], 1};
-            scaleRotateTangent = MathUtil.multiply(
-                    MathUtil.scaleMatrix(myWidth / 2),
-                    nv4cal);
+            //Step 7 and 8
+            double[] currentRightPoint = {translationVector[0] + midPoint[0],
+                    translationVector[1] + midPoint[1],
+                    translationVector[2] + midPoint[2]};
+            double[] currentLeftPoint = {-translationVector[0] + midPoint[0],
+                    -translationVector[1] + midPoint[1],
+                    -translationVector[2] + midPoint[2]};
 
+            double[] nextRightPoint = {translationVector[0] + nextMidPoint[0],
+                    translationVector[1] + nextMidPoint[1],
+                    translationVector[2] + nextMidPoint[2]};
+            double[] nextLeftPoint = {-translationVector[0] + nextMidPoint[0],
+                    -translationVector[1] + nextMidPoint[1],
+                    -translationVector[2] + nextMidPoint[2]};
 
-            double[] rightbottom = {scaleRotateTangent[0] + midpoint[0],
-                    scaleRotateTangent[1] + midpoint[1],
-                    scaleRotateTangent[2] + midpoint[2]};
-            double[] leftbottom = {-scaleRotateTangent[0] + midpoint[0],
-                    -scaleRotateTangent[1] + midpoint[1],
-                    -scaleRotateTangent[2] + midpoint[2]};
-            double[] lefttop = {-scaleRotateTangent[0] + x1,
-                    -scaleRotateTangent[1] + y1, -scaleRotateTangent[2] + z1};
-            double[] righttop = {scaleRotateTangent[0] + x1,
-                    scaleRotateTangent[1] + y1, scaleRotateTangent[2] + z1};
-            double[] normal = MathUtil
-                    .normal(leftbottom, rightbottom, righttop);
+            //Step 9
             gl.glBegin(GL2.GL_QUADS);
-            gl.glNormal3d(-normal[0], -normal[1], -normal[2]);
-
-            gl.glVertex3d(rightbottom[0], rightbottom[1], rightbottom[2]);// --
-
-            gl.glVertex3d(righttop[0], righttop[1], righttop[2]); // --
-
-            gl.glVertex3d(lefttop[0], lefttop[1], lefttop[2]);// --
-
-            gl.glVertex3d(leftbottom[0], leftbottom[1], leftbottom[2]);// --
+            gl.glNormal3d(0, -1, 0);
+            gl.glVertex3d(currentRightPoint[0], currentRightPoint[1], currentRightPoint[2]);
+            gl.glVertex3d(nextRightPoint[0], nextRightPoint[1], nextRightPoint[2]);
+            gl.glVertex3d(nextLeftPoint[0], nextLeftPoint[1], nextLeftPoint[2]);
+            gl.glVertex3d(currentLeftPoint[0], currentLeftPoint[1], currentLeftPoint[2]);
             gl.glEnd();
         }
     }

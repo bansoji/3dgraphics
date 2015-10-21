@@ -265,7 +265,6 @@ public class Terrain {
 
         for(Road road: myRoads) {
             gl.glLoadIdentity();
-            gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
             road.draw(gl);
         }
 

@@ -232,6 +232,7 @@ public class Terrain {
     public void draw(GL2 gl, GLU glu){
 
         //draw terrain
+
         for(int z = 0; z < mySize.height - 1; z++){
             for(int x = 0; x < mySize.width - 1; x++){
 
@@ -240,6 +241,10 @@ public class Terrain {
                 double[] pt3 = {x + 1, myAltitude[x+1][z], z};
                 double[] normal = MathUtil.findNormalToPlane(pt1, pt2, pt3);
                 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_TRIANGLES);
+
+                float[] diffuseCoeff = {1.0f, 1.0f, 1.0f, 1};
+
+                gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, diffuseCoeff, 0);
                 gl.glBegin(GL2.GL_POLYGON);
                 gl.glNormal3d(normal[0], normal[1], normal[2]);
                 {

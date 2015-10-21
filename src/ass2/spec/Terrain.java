@@ -221,8 +221,8 @@ public class Terrain {
     /**
      * Add a road. 
      * 
-     * @param x
-     * @param z
+     * @param width
+     * @param spine
      */
     public void addRoad(double width, double[] spine) {
         Road road = new Road(width, spine, this);

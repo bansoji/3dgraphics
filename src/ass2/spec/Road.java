@@ -47,7 +47,7 @@ public class Road {
         texture.bind(gl);
         TextureCoords coords = texture.getImageTexCoords();
 
-        for (double t = 0.0; t < 0.99; t += increment) {
+        for (double t = 0.0; t < 0.98; t += increment) {
             //Step 1
             double[] currentPoint = point(t);
             double x = currentPoint[0];
@@ -61,17 +61,27 @@ public class Road {
             double z1 = nextPoint[1];
             double[] nextMidPoint = {x1, altitude, z1};
 
+            double nextT2 = t + increment + increment;
+            double[] nextPoint2 = point(nextT2);
+            double x2 = nextPoint2[0];
+            double z2 = nextPoint2[1];
+            double[] nextMidPoint2 = {x2, altitude, z2};
+
             //Step 3
             double[] tangent = {x1 - x, 0, z1 - z, 1}; // is a vector, for matrix calc
+            double[] tangent2 = {x2 - x1, 0, z2 - z1, 1};
 
             //Step 4
             double[] sideVector = MathUtil.crossProduct(vectorNormal, tangent);
+            double[] sideVector2 = MathUtil.crossProduct(vectorNormal, tangent2);
 
             //Step 5
             double[] normalisedVector = MathUtil.normaliseVector(sideVector);
+            double[] normalisedVector2 = MathUtil.normaliseVector(sideVector2);
 
             //Step 6
             double[] translationVector = MathUtil.multiply(MathUtil.scaleMatrix(myWidth / 2), normalisedVector);
+            double[] translationVector2 = MathUtil.multiply(MathUtil.scaleMatrix(myWidth / 2), normalisedVector2);
 
 
             //Step 7 and 8
@@ -82,12 +92,12 @@ public class Road {
                     -translationVector[1] + midPoint[1],
                     -translationVector[2] + midPoint[2]};
 
-            double[] nextRightPoint = {translationVector[0] + nextMidPoint[0],
-                    translationVector[1] + nextMidPoint[1],
-                    translationVector[2] + nextMidPoint[2]};
-            double[] nextLeftPoint = {-translationVector[0] + nextMidPoint[0],
-                    -translationVector[1] + nextMidPoint[1],
-                    -translationVector[2] + nextMidPoint[2]};
+            double[] nextRightPoint = {translationVector2[0] + nextMidPoint[0],
+                    translationVector2[1] + nextMidPoint[1],
+                    translationVector2[2] + nextMidPoint[2]};
+            double[] nextLeftPoint = {-translationVector2[0] + nextMidPoint[0],
+                    -translationVector2[1] + nextMidPoint[1],
+                    -translationVector2[2] + nextMidPoint[2]};
 
             //Step 9
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_QUADS);

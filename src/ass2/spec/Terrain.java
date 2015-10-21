@@ -14,6 +14,8 @@ import javax.media.opengl.glu.GLU;
 
 import javax.media.opengl.GL2;
 
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureCoords;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -229,10 +231,12 @@ public class Terrain {
         myRoads.add(road);        
     }
 
-    public void draw(GL2 gl, GLU glu){
+    public void draw(GL2 gl, GLU glu, Texture groundTex, Texture trunkTex, Texture roadTex, Texture leavesTex){
 
         //draw terrain
-
+        groundTex.enable(gl);
+        groundTex.bind(gl);
+        TextureCoords coords = groundTex.getImageTexCoords();
         for(int z = 0; z < mySize.height - 1; z++){
             for(int x = 0; x < mySize.width - 1; x++){
 
@@ -247,8 +251,11 @@ public class Terrain {
                 gl.glBegin(GL2.GL_POLYGON);
                 gl.glNormal3d(normal[0], normal[1], normal[2]);
                 {
+                    gl.glTexCoord2f(coords.left(),coords.bottom());
                     gl.glVertex3d(x, myAltitude[x][z], z);
+                    gl.glTexCoord2f(coords.right(),coords.bottom());
                     gl.glVertex3d(x, myAltitude[x][z + 1], z + 1);
+                    gl.glTexCoord2f(coords.left(),coords.top());
                     gl.glVertex3d(x + 1, myAltitude[x + 1][z], z);
                 }
                 gl.glEnd();
@@ -261,8 +268,11 @@ public class Terrain {
                 gl.glBegin(GL2.GL_POLYGON);
                 gl.glNormal3d(nextNormal[0], nextNormal[1], nextNormal[2]);
                 {
+                    gl.glTexCoord2f(coords.left(),coords.top());
                     gl.glVertex3d(x + 1, myAltitude[x + 1][z], z);
+                    gl.glTexCoord2f(coords.right(),coords.bottom());
                     gl.glVertex3d(x, myAltitude[x][z + 1], z + 1);
+                    gl.glTexCoord2f(coords.right(),coords.top());
                     gl.glVertex3d(x + 1, myAltitude[x + 1][z + 1], z + 1);
                 }
                 gl.glEnd();
@@ -271,16 +281,14 @@ public class Terrain {
         }
 
         //draw trees
-        for(Tree t : myTrees){
+        for(Tree tree : myTrees){
             gl.glLoadIdentity();
-            t.draw(gl,glu);
-
-
+            tree.draw(gl,glu,trunkTex,leavesTex);
         }
 
         for(Road road: myRoads) {
             gl.glLoadIdentity();
-            road.draw(gl);
+            road.draw(gl,roadTex);
         }
 
     }

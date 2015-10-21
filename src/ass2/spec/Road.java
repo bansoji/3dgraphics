@@ -22,7 +22,7 @@ public class Road {
      * Draws the road.
      * @param gl
      */
-    public void draw(GL2 gl) {
+    public void draw(GL2 gl,Texture texture) {
 
         /**
          * What to do here:
@@ -42,6 +42,10 @@ public class Road {
         double[] startPoint = point(0);
         double[] vectorNormal = {0, 1, 0, 1}; //Always vertical, since it's a flat road
         double altitude = myTerrain.altitude(startPoint[0], startPoint[1]) + offset;
+
+        texture.enable(gl);
+        texture.bind(gl);
+        TextureCoords coords = texture.getImageTexCoords();
 
         for (double t = 0.0; t < 0.99; t += increment) {
             //Step 1
@@ -89,9 +93,13 @@ public class Road {
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_QUADS);
             gl.glBegin(GL2.GL_QUADS);
             gl.glNormal3d(0, 1, 0);
+            gl.glTexCoord2f(coords.left(),coords.bottom());
             gl.glVertex3d(currentRightPoint[0], currentRightPoint[1], currentRightPoint[2]);
+            gl.glTexCoord2f(coords.right(),coords.bottom());
             gl.glVertex3d(nextRightPoint[0], nextRightPoint[1], nextRightPoint[2]);
+            gl.glTexCoord2f(coords.right(),coords.top());
             gl.glVertex3d(nextLeftPoint[0], nextLeftPoint[1], nextLeftPoint[2]);
+            gl.glTexCoord2f(coords.left(),coords.top());
             gl.glVertex3d(currentLeftPoint[0], currentLeftPoint[1], currentLeftPoint[2]);
             gl.glEnd();
         }

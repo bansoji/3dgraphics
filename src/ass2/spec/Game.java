@@ -4,12 +4,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLJPanel;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 
@@ -24,6 +26,11 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     private double[] cameraPos;
     private double cameraRot;
     private double moveDistance;
+
+    private Texture grass;
+    private Texture bark;
+    private Texture gravel;
+    private Texture leaves;
 
 
     public Game(Terrain terrain) {
@@ -86,8 +93,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         setCamera(gl, glu, 100);
 
 
-        myTerrain.draw(gl,glu);
-
+        myTerrain.draw(gl,glu,grass,bark,gravel,leaves);
 
         gl.glEnable(GL2.GL_LIGHTING);
         gl.glEnable(GL2.GL_LIGHT1);
@@ -134,8 +140,21 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glEnable(GL2.GL_DEPTH_TEST);
         gl.glClearColor(0.2f,0.8f,1,0);
 
+        //init textures
+        gl.glEnable(GL2.GL_TEXTURE_2D);
 
-
+        try {
+            grass = TextureIO.newTexture(getClass().getClassLoader().getResource("grass.png"),false,"png");
+            bark = TextureIO.newTexture(getClass().getClassLoader().getResource("bark.png"),false,"png");
+            gravel = TextureIO.newTexture(getClass().getClassLoader().getResource("gravel.png"),false,"png");
+            leaves = TextureIO.newTexture(getClass().getClassLoader().getResource("leaves.png"),false,"png");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        //set filters
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR_MIPMAP_LINEAR);
+        gl.glGenerateMipmap(GL2.GL_TEXTURE_2D);
     }
 
 	@Override

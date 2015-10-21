@@ -10,7 +10,8 @@ import javax.media.opengl.awt.GLJPanel;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 import com.jogamp.opengl.util.FPSAnimator;
-
+import com.jogamp.opengl.util.texture.TextureData;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 
 /**
@@ -39,23 +40,25 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
      *
      */
     public void run() {
-    	  GLProfile glp = GLProfile.getDefault();
-          GLCapabilities caps = new GLCapabilities(glp);
-          GLJPanel panel = new GLJPanel();
-          panel.addGLEventListener(this);
-          panel.addKeyListener(this);
-          panel.setFocusable(true);
+        GLProfile glp = GLProfile.getDefault();
+        GLCapabilities caps = new GLCapabilities(glp);
+        GLJPanel panel = new GLJPanel();
+        panel.addGLEventListener(this);
+        panel.addKeyListener(this);
+        panel.setFocusable(true);
 
+        //load texture
+        //TextureData data = TextureIO.newTextureData(glp,"FILE NAME",false, "bmp");
  
-          // Add an animator to call 'display' at 60fps        
-          FPSAnimator animator = new FPSAnimator(60);
-          animator.add(panel);
-          animator.start();
+        // Add an animator to call 'display' at 60fps
+        FPSAnimator animator = new FPSAnimator(60);
+        animator.add(panel);
+        animator.start();
 
-          getContentPane().add(panel);
-          setSize(800, 600);        
-          setVisible(true);
-          setDefaultCloseOperation(EXIT_ON_CLOSE);        
+        getContentPane().add(panel);
+        setSize(800, 600);
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     
     /**
@@ -92,7 +95,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glPushMatrix();
 
         float[] globalAmb =
-                {0.2f, 0.2f, 0.2f, 1.0f};
+                {1, 1, 1, 1.0f};
         gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globalAmb, 0);
 
         float[] d = new float[] {1.0f, 1.0f, 1.0f, 1.0f};

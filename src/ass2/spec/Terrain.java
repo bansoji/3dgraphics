@@ -13,7 +13,6 @@ import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.glu.GLUquadric;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -259,21 +258,16 @@ public class Terrain {
         //draw trees
         for(Tree t : myTrees){
             gl.glLoadIdentity();
-            gl.glTranslated(t.getPosition()[0],t.getPosition()[1],t.getPosition()[2]);
-            gl.glRotated(-90,1,0,0);
-            GLUquadric leaves = glu.gluNewQuadric();
-            GLUquadric trunk = glu.gluNewQuadric();
-            glu.gluCylinder(trunk,0.1,0.1,1,8,8);
-            gl.glTranslated(0,0,0.2);
-            glu.gluCylinder(leaves,0.5,0,2,16,16);
+            t.draw(gl,glu);
+
 
         }
 
-            for(Road road: myRoads) {
-                gl.glLoadIdentity();
-                gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-                road.draw(gl);
-            }
+        for(Road road: myRoads) {
+            gl.glLoadIdentity();
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+            road.draw(gl);
+        }
 
     }
 

@@ -85,6 +85,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 
         myTerrain.draw(gl,glu);
 
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GL2.GL_LIGHT0);
+
         /*// set the view matrix based on the camera position
         myCamera.setView(gl);
 

@@ -87,7 +87,7 @@ public class Road {
 
             //Step 9
             gl.glBegin(GL2.GL_QUADS);
-            gl.glNormal3d(0, -1, 0);
+            gl.glNormal3d(0, 1, 0);
             gl.glVertex3d(currentRightPoint[0], currentRightPoint[1], currentRightPoint[2]);
             gl.glVertex3d(nextRightPoint[0], nextRightPoint[1], nextRightPoint[2]);
             gl.glVertex3d(nextLeftPoint[0], nextLeftPoint[1], nextLeftPoint[2]);

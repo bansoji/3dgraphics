@@ -234,8 +234,14 @@ public class Terrain {
         //draw terrain
         for(int z = 0; z < mySize.height - 1; z++){
             for(int x = 0; x < mySize.width - 1; x++){
+
+                double[] pt1 = {x, myAltitude[x][z], z};
+                double[] pt2 = {x, myAltitude[x][z+1], z + 1};
+                double[] pt3 = {x + 1, myAltitude[x+1][z], z};
+                double[] normal = MathUtil.findNormalToPlane(pt1, pt2, pt3);
                 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
                 gl.glBegin(GL2.GL_POLYGON);
+                gl.glNormal3d(normal[0], normal[1], normal[2]);
                 {
                     gl.glVertex3d(x, myAltitude[x][z], z);
                     gl.glVertex3d(x, myAltitude[x][z + 1], z + 1);
@@ -243,8 +249,13 @@ public class Terrain {
                 }
                 gl.glEnd();
 
+                double[] nextPt1 = {x + 1, myAltitude[x + 1][z], z};
+                double[] nextPt2 = {x, myAltitude[x][z + 1], z + 1};
+                double[] nextPt3 = {x + 1, myAltitude[x + 1][z + 1], z + 1};
+                double[] nextNormal = MathUtil.findNormalToPlane(nextPt1, nextPt2, nextPt3);
                 gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
                 gl.glBegin(GL2.GL_POLYGON);
+                gl.glNormal3d(nextNormal[0], nextNormal[1], nextNormal[2]);
                 {
                     gl.glVertex3d(x + 1, myAltitude[x + 1][z], z);
                     gl.glVertex3d(x, myAltitude[x][z + 1], z + 1);

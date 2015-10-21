@@ -90,7 +90,7 @@ public class MathUtil {
     /**
      * TODO: A 2D translation matrix for the given offset vector
      *
-     * @param pos
+     * @param v
      * @return
      */
     public static double[][] translationMatrix(double[] v) {
@@ -168,6 +168,26 @@ public class MathUtil {
         result[2] = vector[2]/magnitude;
         result[3] = 1;
         return result;
+    }
+
+    /**
+     * Given three points that are on a plane, find the normal as a vector
+     * @param pt1
+     * @param pt2
+     * @param pt3
+     * @return
+     */
+    public static double[] findNormalToPlane(double[] pt1, double[] pt2, double[] pt3) {
+        double[] normal = new double[3];
+        double[] vector1 = { pt1[0] - pt2[0],
+                            pt1[1] - pt2[1],
+                            pt1[2] - pt2[2]};
+        double[] vector2 = { pt1[0] - pt3[0],
+                            pt1[1] - pt3[1],
+                            pt1[2] - pt3[2]};
+        normal = crossProduct(vector1, vector2);
+
+        return normal;
     }
 
 

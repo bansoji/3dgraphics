@@ -19,33 +19,29 @@ public class Road {
     private Terrain myTerrain;
 
 
-    public double altitude(double x, double z) {
-        return myTerrain.altitude(x, z);
-    }
     public void draw(GL2 gl) {
+
         gl.glColor3d(110 / 255d, 110 / 255d, 110 / 255d);
 
+        double offset = 0.001; //make sure the road is showing
+        double increment = 0.01; //accuracy measure
+        double[] startPoint = point(0);
+        double altitude = myTerrain.altitude(startPoint[0], startPoint[1]);
 
+        for (double t = 0.0; t < 0.99; t += increment) {
+            double[] currentPoint = point(t);
+            double x = currentPoint[0];
+            double z = currentPoint[1];
+            double[] midpoint = {x, altitude, z};
 
-        double offset = 0.001;
-        double roadSegment = 0.01;
-        for (double t = 0.0; t <= 0.99; t += roadSegment) {
-            double[] point0 = point(t);
-            double x0 = point0[0];
-            double z0 = point0[1];
-            double y0 = altitude(x0, z0) + offset;
-            double[] midpoint = {x0, y0, z0};
+            double nextT = t + increment;
+            double[] nextPoint = point(nextT);
+            double x1 = nextPoint[0];
+            double z1 = nextPoint[1];
 
-            double t1 = t + roadSegment;
-            double[] point1 = point(t1);
-            double x1 = point1[0];
-            double z1 = point1[1];
-            double y1 = altitude(x1, z1) + offset;
+            double[] tangent = {x1 - x, 0, z1 - z, 1}; // is a vector, for matrix calc
 
-            double[] tangent = {x1 - x0, y1 - y0, z1 - z0, 1}; // for matrix
-            // calculation
-
-            double[] scaleRotateTangent = new double[4];
+            double[] scaleRotateTangent = new double[4]; //Create a matrix that will correctly scale and rotate vectors
 
 
             double[] pointA = {Math.floor(x0), myTerrain.altitude(Math.floor(x0), Math.floor(z0)), Math.floor(z0)};

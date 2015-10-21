@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
 import javax.media.opengl.GL2;
@@ -270,6 +271,7 @@ public class Terrain {
 
             for(Road road: myRoads) {
                 gl.glLoadIdentity();
+                gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
                 road.draw(gl);
             }
 

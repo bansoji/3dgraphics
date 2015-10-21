@@ -92,7 +92,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glPushMatrix();
 
         float[] globalAmb =
-                {0.1f, 0.2f, 0.3f, 1.0f};
+                {0.2f, 0.2f, 0.2f, 1.0f};
         gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globalAmb, 0);
 
         float[] d = new float[] {1.0f, 1.0f, 1.0f, 1.0f};
@@ -129,6 +129,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
         gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glClearColor(0.2f,0.8f,1,0);
 
 
 

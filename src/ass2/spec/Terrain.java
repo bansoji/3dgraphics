@@ -239,7 +239,7 @@ public class Terrain {
                 double[] pt2 = {x, myAltitude[x][z+1], z + 1};
                 double[] pt3 = {x + 1, myAltitude[x+1][z], z};
                 double[] normal = MathUtil.findNormalToPlane(pt1, pt2, pt3);
-                gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+                gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_TRIANGLES);
                 gl.glBegin(GL2.GL_POLYGON);
                 gl.glNormal3d(normal[0], normal[1], normal[2]);
                 {
@@ -253,7 +253,7 @@ public class Terrain {
                 double[] nextPt2 = {x, myAltitude[x][z + 1], z + 1};
                 double[] nextPt3 = {x + 1, myAltitude[x + 1][z + 1], z + 1};
                 double[] nextNormal = MathUtil.findNormalToPlane(nextPt1, nextPt2, nextPt3);
-                gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+                gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_TRIANGLES);
                 gl.glBegin(GL2.GL_POLYGON);
                 gl.glNormal3d(nextNormal[0], nextNormal[1], nextNormal[2]);
                 {

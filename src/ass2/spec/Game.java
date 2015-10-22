@@ -116,6 +116,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         diffusePos[2] = myTerrain.getSunlight()[2];
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, diffusePos, 0);
         gl.glPopMatrix();
+
+        //draws avatar according to camera position
         if(thirdperson) {
             gl.glPushMatrix();
             gl.glTranslated(cameraPos[0], myTerrain.altitude(cameraPos[0], cameraPos[1]) + 0.1, cameraPos[1]);

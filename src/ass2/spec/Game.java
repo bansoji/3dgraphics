@@ -11,6 +11,7 @@ import javax.media.opengl.awt.GLJPanel;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -31,6 +32,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     private Texture bark;
     private Texture gravel;
     private Texture leaves;
+
+    private boolean thirdperson = false;
 
 
     public Game(Terrain terrain) {
@@ -90,8 +93,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glLoadIdentity();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
-        setCamera(gl, glu, 100);
+        GLUT glut = new GLUT();
 
+        setCamera(gl, glu);
 
         myTerrain.draw(gl,glu,grass,bark,gravel,leaves);
 
@@ -112,6 +116,13 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         diffusePos[2] = myTerrain.getSunlight()[2];
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, diffusePos, 0);
         gl.glPopMatrix();
+        if(thirdperson) {
+            gl.glPushMatrix();
+            gl.glTranslated(cameraPos[0], myTerrain.altitude(cameraPos[0], cameraPos[1]) + 0.1, cameraPos[1]);
+            gl.glRotated(-cameraRot, 0, 1, 0);
+            glut.glutSolidTeapot(0.1);
+            gl.glPopMatrix();
+        }
 
         /*// set the view matrix based on the camera position
         myCamera.setView(gl);
@@ -143,6 +154,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         //init textures
         gl.glEnable(GL2.GL_TEXTURE_2D);
 
+
         try {
             grass = TextureIO.newTexture(getClass().getClassLoader().getResource("grass.png"),false,"png");
             bark = TextureIO.newTexture(getClass().getClassLoader().getResource("bark.png"),false,"png");
@@ -169,27 +181,42 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     }
 
 
-    private void setCamera(GL2 gl, GLU glu, float distance) {
+    private void setCamera(GL2 gl, GLU glu) {
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
 
         //Perspective Camera
         float aspectRatio = (float) (800.0 / 600.0);
-        glu.gluPerspective(90, 1.333, 0.1, 1000);
+        glu.gluPerspective(90, aspectRatio, 0.1, 1000);
 
-        double altitudeOffset = 0.5;
-        glu.gluLookAt(
-                cameraPos[0],
-                myTerrain.altitude(cameraPos[0],cameraPos[1]) + altitudeOffset,
-                cameraPos[1],
-                cameraPos[0] + Math.cos(Math.toRadians(cameraRot)),
-                myTerrain.altitude(cameraPos[0],cameraPos[1]) + altitudeOffset,
-                cameraPos[1] + Math.sin(Math.toRadians(cameraRot)),
-                0,
-                1,
-                0
-        );
-        //glu.gluLookAt(5, 5, 10, 0, 0, 0, 0, 1, 0);
+        if(!thirdperson) {
+            double altitudeOffset = 0.5;
+            glu.gluLookAt(
+                    cameraPos[0],
+                    myTerrain.altitude(cameraPos[0], cameraPos[1]) + altitudeOffset,
+                    cameraPos[1],
+                    cameraPos[0] + Math.cos(Math.toRadians(cameraRot)),
+                    myTerrain.altitude(cameraPos[0], cameraPos[1]) + altitudeOffset,
+                    cameraPos[1] + Math.sin(Math.toRadians(cameraRot)),
+                    0,
+                    1,
+                    0
+            );
+        } else {
+            double altitudeOffset = 0.5;
+            glu.gluLookAt(
+                    cameraPos[0] - Math.cos(Math.toRadians(cameraRot)),
+                    myTerrain.altitude(cameraPos[0], cameraPos[1]) + altitudeOffset,
+                    cameraPos[1] - Math.sin(Math.toRadians(cameraRot)),
+                    cameraPos[0] + Math.cos(Math.toRadians(cameraRot)),
+                    myTerrain.altitude(cameraPos[0], cameraPos[1]) + altitudeOffset,
+                    cameraPos[1] + Math.sin(Math.toRadians(cameraRot)),
+                    0,
+                    1,
+                    0
+            );
+        }
+
 
         // Change back to model view
         gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -227,6 +254,10 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
             case KeyEvent.VK_RIGHT:
                 cameraRot += 10;
                 break;
+            case KeyEvent.VK_SPACE:
+                thirdperson = !thirdperson;
+                break;
+
             default:
                 break;
 

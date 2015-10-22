@@ -146,7 +146,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         try {
             grass = TextureIO.newTexture(getClass().getClassLoader().getResource("grass.png"),false,"png");
             bark = TextureIO.newTexture(getClass().getClassLoader().getResource("bark.png"),false,"png");
-            gravel = TextureIO.newTexture(getClass().getClassLoader().getResource("gravel.png"),false,"png");
+            gravel = TextureIO.newTexture(getClass().getClassLoader().getResource("road.png"),false,"png");
             leaves = TextureIO.newTexture(getClass().getClassLoader().getResource("leaves.png"),false,"png");
         } catch (IOException e){
             e.printStackTrace();

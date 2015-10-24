@@ -286,26 +286,29 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         float[] globalAmb = {1, 1, 1, 1.0f};
         gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globalAmb, 0);
 
+        //Added a new light here, called GL_LIGHT2. Use this for the torch/spotlight?
         if (nightMode) {
             gl.glDisable(GL2.GL_LIGHT1);
+            gl.glEnable(GL2.GL_LIGHT2);
         } else {
             gl.glEnable(GL2.GL_LIGHT1);
+            gl.glDisable(GL2.GL_LIGHT2);
         }
 
         float[] d = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, d, 0);
-        float[] diffusePos = new float[3];
-        diffusePos[0] = myTerrain.getSunlight()[0];
-        diffusePos[1] = myTerrain.getSunlight()[1];
-        diffusePos[2] = myTerrain.getSunlight()[2];
-        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, diffusePos, 0);
+        float[] dir = new float[3];
+        dir[0] = myTerrain.getSunlight()[0];
+        dir[1] = myTerrain.getSunlight()[1];
+        dir[2] = myTerrain.getSunlight()[2];
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, dir, 0);
 
         gl.glPopMatrix();
 
     }
 
 
-    //------------------------------------KEYLISINTER STUFF --------------------------------------//
+    //------------------------------------KEY LISTENER STUFF --------------------------------------//
     @Override
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyCode()){

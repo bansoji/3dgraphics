@@ -24,6 +24,7 @@ public class Tree {
         myPos[1] = y;
         myPos[2] = z;
 
+        //This is the rewrite system. Change these if you want to change how it generates.
         rulesX = "F - [ [ X ] + X ] + F [ + F X ] - X";
         rulesY = "F F";
     }
@@ -89,6 +90,7 @@ public class Tree {
             gl.glPopMatrix();
 
 
+            //This handles the rewrite system. Change these if you want to change how to generate
             for (String s : interpreter) {
                 if (s.equals("F")) {
                     //upwards 0.2
@@ -109,9 +111,12 @@ public class Tree {
                 gl.glPushMatrix();
                 gl.glRotated(-90, 1, 0, 0);
                 glu.gluCylinder(trunk, 0.01, 0.01, 0.2, 2, 2);
-                /*gl.glTranslated(0, 0, 0.2);
-                glu.gluCylinder(leaves, 0.05, 0, 0.2, 4, 4);
+                //If you want the little balls as "leaves", uncomment this. This will add far more workload though.
+                /*
+                gl.glTranslated(0, 0, 0.2);
+                glu.gluSphere(leaves, 0.1, 4,4);
                 */
+
                 gl.glPopMatrix();
             }
         }

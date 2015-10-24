@@ -37,7 +37,7 @@ public class Road {
          * 9. Draw dat quad
          *
          */
-        double offset = 0.001; //make sure the road is showing
+        double offset = 0.01; //make sure the road is showing
         double increment = 0.01; //accuracy measure
         double[] startPoint = point(0);
         double[] vectorNormal = {0, 1, 0, 1}; //Always vertical, since it's a flat road

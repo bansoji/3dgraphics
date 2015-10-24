@@ -231,7 +231,7 @@ public class Terrain {
         myRoads.add(road);        
     }
 
-    public void draw(GL2 gl, GLU glu, Texture groundTex, Texture trunkTex, Texture roadTex, Texture leavesTex){
+    public void draw(GL2 gl, GLU glu, Texture groundTex, Texture trunkTex, Texture roadTex, Texture leavesTex, boolean useFractal, int iteration){
 
         //draw terrain
         groundTex.enable(gl);
@@ -283,7 +283,7 @@ public class Terrain {
         //draw trees
         for(Tree tree : myTrees){
             gl.glLoadIdentity();
-            tree.draw(gl,glu,trunkTex,leavesTex);
+            tree.draw(gl,glu,trunkTex,leavesTex, useFractal, iteration);
         }
 
         for(Road road: myRoads) {

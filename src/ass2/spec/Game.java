@@ -39,6 +39,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     private Texture leaves;
 
     private boolean thirdperson = false;
+    private int iteration = 3;
+    private boolean useFractal = false;
 
 
     private FloatBuffer sphereVertexBuffer; // Holds the vertex coords, for use with glDrawArrays
@@ -116,7 +118,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         setCamera(gl, glu);
         setLighting(gl);
 
-        myTerrain.draw(gl,glu,grass,bark,gravel,leaves);
+        myTerrain.draw(gl,glu,grass,bark,gravel,leaves,useFractal,iteration);
 
         //draws avatar according to camera position
         if(thirdperson) {
@@ -329,6 +331,14 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
             case KeyEvent.VK_SPACE:
                 thirdperson = !thirdperson;
                 break;
+            case KeyEvent.VK_K:
+                iteration++;
+                break;
+            case KeyEvent.VK_J:
+                iteration--;
+                break;
+            case KeyEvent.VK_L:
+                useFractal = !useFractal;
 
             default:
                 break;

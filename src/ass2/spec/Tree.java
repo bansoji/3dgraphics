@@ -61,6 +61,7 @@ public class Tree {
             String generator = "X";
 
 
+            //This is the generator, independent of the command rules and rewrite stuff
             for (int i = 0; i < iterations; i++) {
                 String[] arguments = generator.split(" ");
                 generator = "";

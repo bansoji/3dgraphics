@@ -44,7 +44,7 @@ public class Tree {
         glu.gluQuadricNormals(leaves, GLU.GLU_SMOOTH);
 
         if (!useFractal) {
-
+            gl.glPushMatrix();
             gl.glTranslated(this.getPosition()[0], this.getPosition()[1], this.getPosition()[2]);
             gl.glRotated(-90, 1, 0, 0);
             barkTex.enable(gl);
@@ -56,6 +56,7 @@ public class Tree {
             leavesTex.bind(gl);
             glu.gluCylinder(leaves, 0.5, 0, 2, 16, 16);
             leavesTex.disable(gl);
+            gl.glPopMatrix();
 
         } else {
 

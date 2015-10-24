@@ -19,6 +19,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.GLBuffers;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 
 
@@ -37,6 +38,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     private Texture bark;
     private Texture gravel;
     private Texture leaves;
+    private Texture pink;
 
     private boolean thirdperson = false;
     private int iteration = 3;
@@ -126,7 +128,14 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
             gl.glPushMatrix();
             gl.glTranslated(cameraPos[0], myTerrain.altitude(cameraPos[0], cameraPos[1]) + 0.1, cameraPos[1]);
             gl.glRotated(-cameraRot, 0, 1, 0);
+            gl.glEnable(GL2.GL_TEXTURE_GEN_S); //enable texture coordinate generation
+            gl.glEnable(GL2.GL_TEXTURE_GEN_T);
+            pink.enable(gl);
+            pink.bind(gl);
+
             glut.glutSolidTeapot(0.1);
+            gl.glDisable(GL2.GL_TEXTURE_GEN_S); //enable texture coordinate generation
+            gl.glDisable(GL2.GL_TEXTURE_GEN_T);
             gl.glPopMatrix();
         }
 
@@ -206,6 +215,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
             bark = TextureIO.newTexture(getClass().getClassLoader().getResource("bark.png"),false,"png");
             gravel = TextureIO.newTexture(getClass().getClassLoader().getResource("road.png"),false,"png");
             leaves = TextureIO.newTexture(getClass().getClassLoader().getResource("leaves.png"),false,"png");
+            pink = TextureIO.newTexture(getClass().getClassLoader().getResource("pink.png"),false,"png");
         } catch (IOException e){
             e.printStackTrace();
         }

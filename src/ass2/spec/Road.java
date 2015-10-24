@@ -46,8 +46,10 @@ public class Road {
         texture.enable(gl);
         texture.bind(gl);
         TextureCoords coords = texture.getImageTexCoords();
+        //Gets the proper t size for bezier spline
+        double roadLength = ((myPoints.size() / 2.0) - 1.0) / 3.0 - (increment * 2);
 
-        for (double t = 0.0; t < 0.98; t += increment) {
+        for (double t = 0.0; t < roadLength; t += increment) {
             //Step 1
             double[] currentPoint = point(t);
             double x = currentPoint[0];

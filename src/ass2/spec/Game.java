@@ -363,7 +363,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
             double altitudeOffset = 0.5;
             glu.gluLookAt(
                     cameraPos[0] - Math.cos(Math.toRadians(cameraRot)),
-                    myTerrain.altitude(cameraPos[0], cameraPos[1]) + altitudeOffset,
+                    myTerrain.altitude(cameraPos[0], cameraPos[1]) + altitudeOffset + 1,
                     cameraPos[1] - Math.sin(Math.toRadians(cameraRot)),
                     cameraPos[0] + Math.cos(Math.toRadians(cameraRot)),
                     myTerrain.altitude(cameraPos[0], cameraPos[1]) + altitudeOffset,

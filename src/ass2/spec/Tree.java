@@ -5,7 +5,6 @@ import com.jogamp.opengl.util.texture.Texture;
 import javax.media.opengl.glu.GLUquadric;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.GL2;
-import java.util.HashMap;
 
 /**
  * COMMENT: Comment Tree 

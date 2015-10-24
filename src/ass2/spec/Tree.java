@@ -24,8 +24,8 @@ public class Tree {
         myPos[2] = z;
 
         //This is the rewrite system. Change these if you want to change how it generates.
-        rulesX = "F - [ [ X ] + X ] + F [ + F X ] - X";
-        rulesY = "F F";
+        rulesX = "F - R R [ [ R X ] E + X ] E + F [ R + F E E X ] R R - X";
+        rulesY = "F E F";
     }
     
     public double[] getPosition() {
@@ -114,6 +114,10 @@ public class Tree {
                 } else if (s.equals("]")) {
                     //pop
                     gl.glPopMatrix();
+                } else if (s.equals("R")) {
+                    gl.glRotated(20, 0, 1, 0);
+                } else if (s.equals("E")) {
+                    gl.glRotated(-20, 0, 1, 0);
                 }
                 gl.glPushMatrix();
                 gl.glRotated(-90, 1, 0, 0);

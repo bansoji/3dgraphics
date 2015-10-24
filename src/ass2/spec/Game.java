@@ -452,12 +452,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
                 thirdperson = !thirdperson;
                 break;
             case KeyEvent.VK_K:
-                if (iteration < 6) {
+                if (iteration < 5 && useFractal) {
                     iteration++;
                 }
                 break;
             case KeyEvent.VK_J:
-                if (iteration > 0) {
+                if (iteration > 0 && useFractal) {
                     iteration--;
                 }
                 break;

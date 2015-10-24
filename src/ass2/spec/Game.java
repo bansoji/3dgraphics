@@ -47,6 +47,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     private boolean useFractal = false;
     private boolean nightMode = false;
 
+    private float width = 800;
+    private float height = 600;
+
 
     private FloatBuffer sphereVertexBuffer; // Holds the vertex coords, for use with glDrawArrays
     private FloatBuffer sphereNormalBuffer; // Holds the normal vectors, for use with glDrawArrays
@@ -321,6 +324,15 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         GL2 gl = drawable.getGL().getGL2();
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
+        // match the projection aspect ratio to the viewport
+        // to avoid stretching
+        this.width = width;
+        this.height = height;
+        float aspectRatio = (float) (width / height);
+        float adjustedFOV = 67.5f * aspectRatio;
+
+        glu.gluPerspective(adjustedFOV, aspectRatio, 0.1, 1000);
+
 
     }
 
@@ -330,8 +342,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glLoadIdentity();
 
         //Perspective Camera
-        float aspectRatio = (float) (800.0 / 600.0);
-        glu.gluPerspective(90, aspectRatio, 0.1, 1000);
+        float aspectRatio = (width / height);
+        float FOV = 67.5f * aspectRatio;
+        glu.gluPerspective(FOV, aspectRatio, 0.1, 1000);
 
         if(!thirdperson) {
             double altitudeOffset = 0.5;

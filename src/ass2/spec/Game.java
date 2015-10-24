@@ -456,6 +456,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
                     iteration++;
                 }
                 break;
+            //set limits for iteration
             case KeyEvent.VK_J:
                 if (iteration > 0 && useFractal) {
                     iteration--;

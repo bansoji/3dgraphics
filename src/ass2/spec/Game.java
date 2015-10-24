@@ -33,6 +33,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     private double[] cameraPos;
     private double cameraRot;
     private double moveDistance;
+    private double[] allyPos;
+    private double allyRotation;
 
     private Texture grass;
     private Texture bark;
@@ -70,6 +72,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         cameraPos = new double[]{0,0};
         cameraRot = 45;
         moveDistance = 0.1;
+        allyPos = new double[]{0,0};
+        allyRotation = 90;
    
     }
     
@@ -173,13 +177,71 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glBindTexture(GL.GL_TEXTURE_2D,bark.getTextureObject());
         gl.glUniform1i(textureLoc,0);
 
+        int lightPositionLoc = gl.glGetUniformLocation(shaderprogram,"lightPos");
+        gl.glUniform3f(lightPositionLoc,myTerrain.getSunlight()[0],myTerrain.getSunlight()[1],myTerrain.getSunlight()[2]);
+
+        if(nightMode){
+            int lightDiffLoc = gl.glGetUniformLocation(shaderprogram,"lightDiff");
+            gl.glUniform4f(lightDiffLoc,0.2f,0.2f,0.2f,1);
+
+            int lightAmbLoc = gl.glGetUniformLocation(shaderprogram, "lightAmb");
+            gl.glUniform4f(lightAmbLoc,0,0,0,0);
+
+        } else {
+            int lightDiffLoc = gl.glGetUniformLocation(shaderprogram,"lightDiff");
+            gl.glUniform4f(lightDiffLoc,1.0f, 1.0f, 1.0f, 1.0f);
+
+            int lightAmbLoc = gl.glGetUniformLocation(shaderprogram, "lightAmb");
+            gl.glUniform4f(lightAmbLoc,1,1,1,1);
+        }
+
+        int materialColorLoc = gl.glGetUniformLocation(shaderprogram, "materialColor");
+        gl.glUniform4f(materialColorLoc,0.9f,0.9f,0.9f,1);
+
+
+        double angleToReach = Math.toDegrees(Math.atan2(cameraPos[0] - allyPos[0], cameraPos[1] - allyPos[1])) - 90;
+        double distance = Math.sqrt((allyPos[0] - cameraPos[0])*(allyPos[0] - cameraPos[0]) + (allyPos[1] - cameraPos[1])*(allyPos[1] - cameraPos[1]));
+        System.out.println(angleToReach);
+        if(distance > 0.5) {
+            if(allyPos[0] + 0.1*moveDistance * Math.cos(Math.toRadians(angleToReach)) > 0){
+                allyPos[0] += 0.1*moveDistance * Math.cos(Math.toRadians(angleToReach));
+            }
+            if(allyPos[1] + 0.1*moveDistance * Math.sin(Math.toRadians(-angleToReach)) > 0) {
+                allyPos[1] += 0.1*moveDistance * Math.sin(Math.toRadians(-angleToReach));
+            }
+        }
 
         gl.glPushMatrix();
-        gl.glTranslated(0.5, 0.5, 0.5);
-        gl.glScaled(0.1, 0.1, 0.1);
-
+        gl.glTranslated(allyPos[0],myTerrain.altitude(allyPos[0],allyPos[1]) + 0.1,allyPos[1]);
         drawSphereWithDrawArrays(gl);
         gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        gl.glTranslated(allyPos[0],myTerrain.altitude(allyPos[0],allyPos[1]) + 0.35,allyPos[1]);
+        gl.glScaled(0.7,0.7,0.7);
+        drawSphereWithDrawArrays(gl);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        gl.glTranslated(allyPos[0],myTerrain.altitude(allyPos[0],allyPos[1]) + 0.55,allyPos[1]);
+        gl.glScaled(0.5,0.5,0.5);
+        drawSphereWithDrawArrays(gl);
+        gl.glPopMatrix();
+
+        gl.glUniform4f(materialColorLoc,0.1f,0.1f,0.1f,1);
+
+        gl.glPushMatrix();
+        gl.glTranslated(allyPos[0]+0.09124*Math.cos(Math.toRadians(angleToReach+20)),myTerrain.altitude(allyPos[0],allyPos[1]) + 0.55+0.03,allyPos[1]-0.09124*Math.sin(Math.toRadians(angleToReach+20)));
+        gl.glScaled(0.05,0.05,0.05);
+        drawSphereWithDrawArrays(gl);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        gl.glTranslated(allyPos[0]+0.09124*Math.cos(Math.toRadians(angleToReach-20)),myTerrain.altitude(allyPos[0],allyPos[1]) + 0.55+0.03,allyPos[1]-0.09124*Math.sin(Math.toRadians(angleToReach-20)));
+        gl.glScaled(0.05,0.05,0.05);
+        drawSphereWithDrawArrays(gl);
+        gl.glPopMatrix();
+
 
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
         gl.glUseProgram(0);
@@ -297,32 +359,25 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 
         //Added a new light here, called GL_LIGHT2. Use this for the torch/spotlight?
         float[] globalAmb;
+        float[] d;
         if (nightMode) {
             globalAmb = new float[]{0,0,0,0};
-            gl.glDisable(GL2.GL_LIGHT1);
             gl.glEnable(GL2.GL_LIGHT2);
             gl.glClearColor(0,0,0,0);
+            d = new float[]{0.2f,0.2f,0.2f,1};
+
         } else {
             globalAmb = new float[]{1, 1, 1, 1.0f};
-            gl.glEnable(GL2.GL_LIGHT1);
             gl.glDisable(GL2.GL_LIGHT2);
             gl.glClearColor(0.2f,0.8f,1,0);
+            d = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
         }
 
-
         gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globalAmb, 0);
-        float[] d = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, d, 0);
-        float[] dir = new float[3];
-        dir[0] = myTerrain.getSunlight()[0];
-        dir[1] = myTerrain.getSunlight()[1];
-        dir[2] = myTerrain.getSunlight()[2];
+        float[] dir = new float[]{ myTerrain.getSunlight()[0], myTerrain.getSunlight()[1], myTerrain.getSunlight()[2]};
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, dir, 0);
 
-        float[] d1 = new float[]{0.3f,0.3f,0.3f,1};
-        gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_DIFFUSE, d1, 0);
-        float[] dir1 = new float[]{myTerrain.getSunlight()[0],myTerrain.getSunlight()[1],myTerrain.getSunlight()[2]};
-        gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_POSITION, dir1, 0);
         gl.glPopMatrix();
 
     }
@@ -409,7 +464,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     }
 
     private void createSphereArraysAndVBOs(GL2 gl) {
-        double radius = 0.4;
+        double radius = 0.2;
         int stacks = 16;
         int slices = 32;
         int size = stacks * (slices+1) * 2 * 3;

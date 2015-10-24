@@ -283,18 +283,24 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 
     private void setLighting(GL2 gl){
         gl.glPushMatrix();
-        float[] globalAmb = {1, 1, 1, 1.0f};
-        gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globalAmb, 0);
+
 
         //Added a new light here, called GL_LIGHT2. Use this for the torch/spotlight?
+        float[] globalAmb;
         if (nightMode) {
+            globalAmb = new float[]{0,0,0,0};
             gl.glDisable(GL2.GL_LIGHT1);
             gl.glEnable(GL2.GL_LIGHT2);
+            gl.glClearColor(0,0,0,0);
         } else {
+            globalAmb = new float[]{1, 1, 1, 1.0f};
             gl.glEnable(GL2.GL_LIGHT1);
             gl.glDisable(GL2.GL_LIGHT2);
+            gl.glClearColor(0.2f,0.8f,1,0);
         }
 
+
+        gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globalAmb, 0);
         float[] d = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, d, 0);
         float[] dir = new float[3];
@@ -303,6 +309,10 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         dir[2] = myTerrain.getSunlight()[2];
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, dir, 0);
 
+        float[] d1 = new float[]{0.3f,0.3f,0.3f,1};
+        gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_DIFFUSE, d1, 0);
+        float[] dir1 = new float[]{myTerrain.getSunlight()[0],myTerrain.getSunlight()[1],myTerrain.getSunlight()[2]};
+        gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_POSITION, dir1, 0);
         gl.glPopMatrix();
 
     }

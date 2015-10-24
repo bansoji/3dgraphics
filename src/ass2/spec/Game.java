@@ -187,13 +187,25 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
             int lightAmbLoc = gl.glGetUniformLocation(shaderprogram, "lightAmb");
             gl.glUniform4f(lightAmbLoc,0,0,0,0);
 
+            int modeLoc = gl.glGetUniformLocation(shaderprogram, "nightmode");
+            gl.glUniform1f(modeLoc,1);
+
+            int spotPosLoc = gl.glGetUniformLocation(shaderprogram, "spotPos");
+            gl.glUniform3f(spotPosLoc,(float)-(Math.cos(Math.toRadians(cameraRot))),0,(float)-(Math.sin(Math.toRadians(cameraRot))));
+
+
         } else {
             int lightDiffLoc = gl.glGetUniformLocation(shaderprogram,"lightDiff");
             gl.glUniform4f(lightDiffLoc,1.0f, 1.0f, 1.0f, 1.0f);
 
             int lightAmbLoc = gl.glGetUniformLocation(shaderprogram, "lightAmb");
             gl.glUniform4f(lightAmbLoc,1,1,1,1);
+
+            int modeLoc = gl.glGetUniformLocation(shaderprogram, "nightmode");
+            gl.glUniform1f(modeLoc,0);
         }
+
+
 
         int materialColorLoc = gl.glGetUniformLocation(shaderprogram, "materialColor");
         gl.glUniform4f(materialColorLoc,0.9f,0.9f,0.9f,1);
@@ -379,6 +391,13 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         float[] dir = new float[]{ myTerrain.getSunlight()[0], myTerrain.getSunlight()[1], myTerrain.getSunlight()[2]};
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, dir, 0);
 
+        float[] spotlightDiff = {1,1,1,1};
+        gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_DIFFUSE, spotlightDiff, 0);
+        float[] pos = new float[]{(float)cameraPos[0],(float)(myTerrain.altitude(cameraPos[0],cameraPos[1])+0.3),(float)cameraPos[1],1};
+        gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_POSITION, pos, 0);
+        gl.glLightf(GL2.GL_LIGHT2,GL2.GL_SPOT_CUTOFF,30);
+        float[] spotDir = new float[]{(float)(Math.cos(Math.toRadians(cameraRot))),0,(float) Math.sin(Math.toRadians(cameraRot))};
+        gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_SPOT_DIRECTION, spotDir, 0);
         gl.glPopMatrix();
 
     }

@@ -7,6 +7,8 @@ attribute vec2 texCoords;
 uniform vec4 lightDiff;
 uniform vec3 lightPos;
 uniform vec4 lightAmb;
+uniform float nightmode;
+uniform vec3 spotPos;
 
 varying vec4 lighting_out;
 varying vec2 texture_out;
@@ -27,9 +29,17 @@ void main(void) {
     lightDir = normalize(lightPos - v);
     NdotL = max(dot(normal, lightDir), 0.0);
 
+    if(nightmode == 1){
+    lightDir = spotPos;
+    NdotL = max(dot(normal,lightDir),0.0);
+    lighting_out = NdotL * gl_FrontMaterial.diffuse *
+        vec4(0.95f,0.95f,0.95f,1) + ambient;
+    } else{
+
     /* Compute the diffuse term */
     lighting_out = NdotL * gl_FrontMaterial.diffuse *
     lightDiff + ambient;
+    }
     gl_Position = gl_ModelViewProjectionMatrix * vec4(vertexPos,1);
     texture_out = texCoords;
 }

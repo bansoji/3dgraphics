@@ -72,7 +72,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         cameraPos = new double[]{0,0};
         cameraRot = 45;
         moveDistance = 0.1;
-        allyPos = new double[]{0,0};
+        allyPos = new double[]{0.5,0.5};
         allyRotation = 90;
    
     }
@@ -199,9 +199,10 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glUniform4f(materialColorLoc,0.9f,0.9f,0.9f,1);
 
 
+        //Snow man code
+
         double angleToReach = Math.toDegrees(Math.atan2(cameraPos[0] - allyPos[0], cameraPos[1] - allyPos[1])) - 90;
         double distance = Math.sqrt((allyPos[0] - cameraPos[0])*(allyPos[0] - cameraPos[0]) + (allyPos[1] - cameraPos[1])*(allyPos[1] - cameraPos[1]));
-        System.out.println(angleToReach);
         if(distance > 0.5) {
             if(allyPos[0] + 0.1*moveDistance * Math.cos(Math.toRadians(angleToReach)) > 0){
                 allyPos[0] += 0.1*moveDistance * Math.cos(Math.toRadians(angleToReach));

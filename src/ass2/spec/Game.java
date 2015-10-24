@@ -41,6 +41,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     private boolean thirdperson = false;
     private int iteration = 3;
     private boolean useFractal = false;
+    private boolean nightMode = false;
 
 
     private FloatBuffer sphereVertexBuffer; // Holds the vertex coords, for use with glDrawArrays
@@ -284,13 +285,21 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glPushMatrix();
         float[] globalAmb = {1, 1, 1, 1.0f};
         gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, globalAmb, 0);
-        float[] d = new float[] {1.0f, 1.0f, 1.0f, 1.0f};
+
+        if (nightMode) {
+            gl.glDisable(GL2.GL_LIGHT1);
+        } else {
+            gl.glEnable(GL2.GL_LIGHT1);
+        }
+
+        float[] d = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, d, 0);
         float[] diffusePos = new float[3];
         diffusePos[0] = myTerrain.getSunlight()[0];
         diffusePos[1] = myTerrain.getSunlight()[1];
         diffusePos[2] = myTerrain.getSunlight()[2];
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, diffusePos, 0);
+
         gl.glPopMatrix();
 
     }
@@ -339,6 +348,10 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
                 break;
             case KeyEvent.VK_L:
                 useFractal = !useFractal;
+                break;
+            case KeyEvent.VK_N:
+                nightMode = !nightMode;
+                break;
 
             default:
                 break;

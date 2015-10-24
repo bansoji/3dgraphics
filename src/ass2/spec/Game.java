@@ -376,13 +376,13 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         if (nightMode) {
             globalAmb = new float[]{0,0,0,0};
             gl.glEnable(GL2.GL_LIGHT2);
-            gl.glClearColor(0,0,0,0);
+            gl.glClearColor(0,0.05f,0.08f,0);
             d = new float[]{0.2f,0.2f,0.2f,1};
 
         } else {
             globalAmb = new float[]{1, 1, 1, 1.0f};
             gl.glDisable(GL2.GL_LIGHT2);
-            gl.glClearColor(0.2f,0.8f,1,0);
+            gl.glClearColor(0.2f, 0.8f, 1, 0);
             d = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
         }
 
@@ -439,10 +439,14 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
                 thirdperson = !thirdperson;
                 break;
             case KeyEvent.VK_K:
-                iteration++;
+                if (iteration < 6) {
+                    iteration++;
+                }
                 break;
             case KeyEvent.VK_J:
-                iteration--;
+                if (iteration > 0) {
+                    iteration--;
+                }
                 break;
             case KeyEvent.VK_L:
                 useFractal = !useFractal;

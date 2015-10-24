@@ -393,9 +393,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 
         float[] spotlightDiff = {1,1,1,1};
         gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_DIFFUSE, spotlightDiff, 0);
-        float[] pos = new float[]{(float)cameraPos[0],(float)(myTerrain.altitude(cameraPos[0],cameraPos[1])+0.3),(float)cameraPos[1],1};
+        float[] pos = new float[]{(float)cameraPos[0],(float)(myTerrain.altitude(cameraPos[0],cameraPos[1])+0.4),(float)cameraPos[1],1};
         gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_POSITION, pos, 0);
-        gl.glLightf(GL2.GL_LIGHT2,GL2.GL_SPOT_CUTOFF,30);
+        gl.glLightf(GL2.GL_LIGHT2,GL2.GL_SPOT_CUTOFF,50);
         float[] spotDir = new float[]{(float)(Math.cos(Math.toRadians(cameraRot))),0,(float) Math.sin(Math.toRadians(cameraRot))};
         gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_SPOT_DIRECTION, spotDir, 0);
         gl.glPopMatrix();
